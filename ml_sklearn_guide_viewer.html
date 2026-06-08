@@ -1,0 +1,612 @@
+
+<h2 class="sr-only">Interactive Machine Learning with Scikit-Learn guide viewer with 20 concepts, code examples, and diagrams</h2>
+<style>
+:root { --accent: #7F77DD; --accent-bg: #EEEDFE; --accent-text: #3C3489; --success-bg: #EAF3DE; --success-text: #3B6D11; --info-bg: #E6F1FB; --info-text: #185FA5; --warn-bg: #FAEEDA; --warn-text: #854F0B; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.app { display: flex; height: 600px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; background: var(--color-background-primary); }
+.sidebar { width: 220px; flex-shrink: 0; border-right: 0.5px solid var(--color-border-tertiary); overflow-y: auto; background: var(--color-background-secondary); display: flex; flex-direction: column; }
+.sidebar-header { padding: 12px 14px 8px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.sidebar-title { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+.nav-section { padding: 6px 8px 2px; }
+.nav-label { font-size: 10px; color: var(--color-text-tertiary); padding: 4px 6px 2px; text-transform: uppercase; letter-spacing: 0.06em; }
+.nav-item { display: flex; align-items: center; gap: 7px; padding: 5px 8px; border-radius: 6px; cursor: pointer; font-size: 12px; color: var(--color-text-secondary); transition: background 0.1s; line-height: 1.3; }
+.nav-item:hover { background: var(--color-background-primary); color: var(--color-text-primary); }
+.nav-item.active { background: #EEEDFE; color: #3C3489; font-weight: 500; }
+.nav-item .num { font-size: 10px; color: var(--color-text-tertiary); min-width: 16px; }
+.nav-item.active .num { color: #534AB7; }
+.content { flex: 1; overflow-y: auto; padding: 20px 24px; }
+.concept-header { margin-bottom: 16px; }
+.concept-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px; font-weight: 500; }
+.tag-regression { background: var(--info-bg); color: var(--info-text); }
+.tag-classification { background: var(--success-bg); color: var(--success-text); }
+.tag-preprocessing { background: var(--warn-bg); color: var(--warn-text); }
+.tag-evaluation { background: #FBEAF0; color: #72243E; }
+.tag-unsupervised { background: #EEEDFE; color: #3C3489; }
+.tag-foundation { background: var(--color-background-secondary); color: var(--color-text-secondary); border: 0.5px solid var(--color-border-tertiary); }
+.concept-title { font-size: 20px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+.concept-subtitle { font-size: 13px; color: var(--color-text-secondary); }
+.section { margin-bottom: 20px; }
+.section-title { font-size: 12px; font-weight: 500; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+.analogy-box { background: #FAEEDA; border-left: 3px solid #EF9F27; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; padding: 10px 14px; font-size: 13px; color: #633806; line-height: 1.6; margin-bottom: 16px; }
+.analogy-box strong { color: #412402; }
+.key-points { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.key-point { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--color-text-primary); line-height: 1.5; }
+.key-point i { color: #1D9E75; margin-top: 2px; flex-shrink: 0; }
+.code-block { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); overflow: hidden; margin-bottom: 16px; }
+.code-header { display: flex; align-items: center; justify-content: space-between; padding: 6px 12px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.code-lang { font-size: 11px; color: var(--color-text-tertiary); font-family: var(--font-mono); }
+.code-copy { font-size: 11px; color: var(--color-text-secondary); cursor: pointer; background: none; border: none; display: flex; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 4px; }
+.code-copy:hover { background: var(--color-background-primary); }
+pre { padding: 12px 14px; font-size: 12px; font-family: var(--font-mono); overflow-x: auto; line-height: 1.6; color: var(--color-text-primary); white-space: pre-wrap; }
+.kw { color: #534AB7; } .fn { color: #0F6E56; } .str { color: #854F0B; } .cm { color: var(--color-text-tertiary); } .nb { color: #185FA5; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+.info-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 12px; }
+.info-card-label { font-size: 11px; color: var(--color-text-tertiary); margin-bottom: 2px; }
+.info-card-value { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+.algo-compare { display: flex; flex-direction: column; gap: 4px; }
+.algo-row { display: flex; align-items: center; gap: 10px; font-size: 12px; }
+.algo-name { min-width: 120px; color: var(--color-text-secondary); }
+.algo-bar-bg { flex: 1; background: var(--color-background-secondary); border-radius: 3px; height: 8px; overflow: hidden; }
+.algo-bar { height: 100%; border-radius: 3px; background: #7F77DD; }
+.algo-val { min-width: 36px; text-align: right; font-family: var(--font-mono); font-size: 11px; color: var(--color-text-secondary); }
+.step-flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+.step-box { background: #EEEDFE; color: #3C3489; font-size: 11px; font-weight: 500; padding: 5px 10px; border-radius: 20px; }
+.step-arrow { color: var(--color-text-tertiary); font-size: 14px; }
+.output-block { background: #2C2C2A; border-radius: var(--border-radius-md); padding: 10px 14px; font-family: var(--font-mono); font-size: 11px; color: #C8E6C9; line-height: 1.7; overflow-x: auto; }
+.nav-btn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 6px 14px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); font-size: 12px; cursor: pointer; background: var(--color-background-primary); color: var(--color-text-secondary); }
+.nav-btn:hover { background: var(--color-background-secondary); }
+.nav-btn.primary { background: #EEEDFE; color: #3C3489; border-color: #AFA9EC; }
+.bottom-nav { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 0.5px solid var(--color-border-tertiary); }
+.progress-text { font-size: 11px; color: var(--color-text-tertiary); }
+</style>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title"><i class="ti ti-brain" aria-hidden="true" style="font-size:13px"></i> 20 Concepts</div>
+    </div>
+    <div class="nav-section" id="nav-list"></div>
+  </div>
+  <div class="content" id="content-area"></div>
+</div>
+
+<script>
+const concepts = [
+  {
+    id: 1, title: "What is Machine Learning?", tag: "foundation",
+    tagLabel: "Foundation",
+    subtitle: "Teaching computers to learn from examples",
+    analogy: "Instead of writing rules like <strong>'if email contains win prize → spam'</strong>, you show 1000s of emails and the computer learns the patterns itself.",
+    points: ["ML learns from data, not explicit rules", "The more data, the better the model", "Once trained, models can predict on new data", "scikit-learn makes ML accessible in Python"],
+    steps: ["Collect Data", "Train Model", "Evaluate", "Predict"],
+    code: `<span class="cm"># The 4-step pattern used by EVERY sklearn model</span>
+<span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> LinearRegression
+
+model = LinearRegression()        <span class="cm"># 1. Create</span>
+model.fit(X_train, y_train)       <span class="cm"># 2. Train</span>
+y_pred = model.predict(X_test)    <span class="cm"># 3. Predict</span>
+score = model.score(X_test, y_test) <span class="cm"># 4. Evaluate</span>`,
+    output: `Training complete! R² score: 0.923`
+  },
+  {
+    id: 2, title: "Types of Machine Learning", tag: "foundation",
+    tagLabel: "Foundation",
+    subtitle: "Supervised, Unsupervised, Reinforcement",
+    analogy: "<strong>Supervised</strong> = teacher gives answers. <strong>Unsupervised</strong> = find patterns alone. <strong>Reinforcement</strong> = trial and error with rewards.",
+    points: ["Supervised: labeled data, predict output (price, spam)", "Unsupervised: no labels, find hidden groups", "Classification: predict category (cat/dog)", "Regression: predict number (price, temperature)"],
+    steps: ["Supervised", "Unsupervised", "Reinforcement"],
+    code: `<span class="cm"># Supervised — predict house price (regression)</span>
+<span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> LinearRegression
+model = LinearRegression()
+
+<span class="cm"># Unsupervised — group customers (clustering)</span>
+<span class="kw">from</span> sklearn.cluster <span class="kw">import</span> KMeans
+model = KMeans(n_clusters=<span class="nb">3</span>)
+
+<span class="cm"># Classification — spam or not</span>
+<span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> RandomForestClassifier
+model = RandomForestClassifier()`,
+    output: `All three model types ready to use!`
+  },
+  {
+    id: 3, title: "Setting Up Your Environment", tag: "foundation",
+    tagLabel: "Foundation",
+    subtitle: "Install and verify scikit-learn",
+    analogy: "Think of libraries as <strong>toolboxes</strong>. NumPy = math tools, pandas = spreadsheet tools, sklearn = ML tools. Install once, use forever.",
+    points: ["pip install scikit-learn numpy pandas matplotlib", "Google Colab = free browser-based Python environment", "Always import and verify versions", "scikit-learn 1.4+ recommended"],
+    steps: ["Install", "Import", "Verify", "Code!"],
+    code: `<span class="cm"># Install (run in terminal)</span>
+<span class="cm"># pip install scikit-learn numpy pandas matplotlib</span>
+
+<span class="kw">import</span> sklearn
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+<span class="nb">print</span>(<span class="str">f"sklearn: {sklearn.__version__}"</span>)
+<span class="nb">print</span>(<span class="str">f"numpy:   {np.__version__}"</span>)
+<span class="nb">print</span>(<span class="str">f"pandas:  {pd.__version__}"</span>)
+<span class="nb">print</span>(<span class="str">"✓ All set!"</span>)`,
+    output: `sklearn: 1.4.2\nnumpy:   1.26.4\npandas:  2.2.1\n✓ All set!`
+  },
+  {
+    id: 4, title: "Features & Labels", tag: "foundation",
+    tagLabel: "Foundation",
+    subtitle: "Understanding X (inputs) and y (output)",
+    analogy: "<strong>Features (X)</strong> = what you know (house size, bedrooms). <strong>Label (y)</strong> = what you want to predict (price). ML learns the relationship X → y.",
+    points: ["X = feature matrix (2D), shape: (samples, features)", "y = label vector (1D), shape: (samples,)", "Each row = one data point (one house, one person)", "Features must be numbers (encode text/categories)"],
+    steps: ["Raw Data", "Separate X & y", "Numeric Form", "Ready!"],
+    code: `<span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+data = {<span class="str">'size'</span>: [<span class="nb">1200</span>, <span class="nb">2500</span>, <span class="nb">800</span>],
+        <span class="str">'beds'</span>: [<span class="nb">2</span>, <span class="nb">4</span>, <span class="nb">1</span>],
+        <span class="str">'price'</span>: [<span class="nb">45</span>, <span class="nb">95</span>, <span class="nb">30</span>]}
+df = pd.DataFrame(data)
+
+<span class="cm"># Separate Features (X) and Label (y)</span>
+X = df[[<span class="str">'size'</span>, <span class="str">'beds'</span>]]  <span class="cm"># Features — what we know</span>
+y = df[<span class="str">'price'</span>]           <span class="cm"># Label   — what to predict</span>
+
+<span class="nb">print</span>(<span class="str">f"X shape: {X.shape}"</span>)  <span class="cm"># (3, 2)</span>
+<span class="nb">print</span>(<span class="str">f"y shape: {y.shape}"</span>)  <span class="cm"># (3,)</span>`,
+    output: `X shape: (3, 2)\ny shape: (3,)`
+  },
+  {
+    id: 5, title: "Loading Datasets", tag: "foundation",
+    tagLabel: "Foundation",
+    subtitle: "Using scikit-learn's built-in toy datasets",
+    analogy: "sklearn includes <strong>practice datasets</strong> so you can learn ML without finding data. Iris (flowers), Breast Cancer (medical), Digits (handwriting) — all included!",
+    points: ["load_iris() — 150 flowers, 4 features, 3 classes", "load_breast_cancer() — medical binary classification", "load_digits() — image classification (0-9)", "make_blobs() / make_classification() — synthetic data"],
+    steps: ["load_iris()", "Access .data", "Access .target", "Explore!"],
+    code: `<span class="kw">from</span> sklearn.datasets <span class="kw">import</span> load_iris
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+iris = load_iris()
+df = pd.DataFrame(iris.data,
+                  columns=iris.feature_names)
+df[<span class="str">'species'</span>] = iris.target_names[iris.target]
+
+<span class="nb">print</span>(<span class="str">f"Shape: {df.shape}"</span>)
+<span class="nb">print</span>(df.head(<span class="nb">3</span>))
+<span class="nb">print</span>(df[<span class="str">'species'</span>].value_counts())`,
+    output: `Shape: (150, 5)\n   sepal length  sepal width  species\n0          5.1         3.5   setosa\n1          4.9         3.0   setosa\nsetosa        50\nversicolor    50\nvirginica     50`
+  },
+  {
+    id: 6, title: "Feature Scaling", tag: "preprocessing",
+    tagLabel: "Preprocessing",
+    subtitle: "StandardScaler and MinMaxScaler",
+    analogy: "Age (20–80) vs Salary (20k–100k) — salary values are 1000× bigger so they unfairly dominate! Scaling makes both features equally important.",
+    points: ["StandardScaler: mean=0, std=1 (z-score normalization)", "MinMaxScaler: transforms to range [0, 1]", "Always fit on training data, only transform test data", "Required for KNN, SVM, Logistic Regression"],
+    steps: ["Create Scaler", "fit_transform(train)", "transform(test)", "Same scale!"],
+    code: `<span class="kw">from</span> sklearn.preprocessing <span class="kw">import</span> StandardScaler
+
+scaler = StandardScaler()
+
+<span class="cm"># Fit on training set only!</span>
+X_train_s = scaler.fit_transform(X_train)
+
+<span class="cm"># Only transform test (no fitting!)</span>
+X_test_s = scaler.transform(X_test)
+
+<span class="nb">print</span>(<span class="str">"Before:"</span>, X_train[<span class="nb">0</span>])
+<span class="nb">print</span>(<span class="str">"After: "</span>, X_train_s[<span class="nb">0</span>].round(<span class="nb">2</span>))`,
+    output: `Before: [25.0, 50000.0]\nAfter:  [-1.22, -1.00]`
+  },
+  {
+    id: 7, title: "Handling Missing Data", tag: "preprocessing",
+    tagLabel: "Preprocessing",
+    subtitle: "SimpleImputer to fill NaN values",
+    analogy: "Real data has holes. Like estimating a student's missing test score as the <strong>class average</strong> — that's exactly what mean imputation does!",
+    points: ["NaN values cause model errors — must handle first", "strategy='mean': fill with column average (numeric)", "strategy='median': robust to outliers", "strategy='most_frequent': for categorical columns"],
+    steps: ["Check NaN", "Choose Strategy", "SimpleImputer", "Clean Data!"],
+    code: `<span class="kw">from</span> sklearn.impute <span class="kw">import</span> SimpleImputer
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="cm"># Check missing values</span>
+<span class="nb">print</span>(df.isnull().sum())
+
+imputer = SimpleImputer(strategy=<span class="str">'mean'</span>)
+X_filled = imputer.fit_transform(X)
+
+<span class="cm"># Median is better for skewed data</span>
+imputer2 = SimpleImputer(strategy=<span class="str">'median'</span>)
+X_filled2 = imputer2.fit_transform(X)`,
+    output: `age       2\nsalary    1\nscore     0\ndtype: int64\n\nAll NaN values filled!`
+  },
+  {
+    id: 8, title: "Train-Test Split", tag: "preprocessing",
+    tagLabel: "Preprocessing",
+    subtitle: "Splitting data to evaluate generalization",
+    analogy: "You wouldn't give students the <strong>exam questions while studying</strong>! Train on 80%, test on the remaining 20% the model has never seen.",
+    points: ["test_size=0.2 means 20% held out for testing", "random_state=42 ensures same split every run", "stratify=y keeps class balance in both sets", "Never use test data for training or tuning!"],
+    steps: ["All Data", "80% Train", "20% Test", "Evaluate!"],
+    code: `<span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=<span class="nb">0.2</span>,      <span class="cm"># 20% for testing</span>
+    random_state=<span class="nb">42</span>,   <span class="cm"># reproducibility</span>
+    stratify=y         <span class="cm"># keep class balance</span>
+)
+
+<span class="nb">print</span>(<span class="str">f"Train: {len(X_train)} samples"</span>)
+<span class="nb">print</span>(<span class="str">f"Test:  {len(X_test)}  samples"</span>)`,
+    output: `Train: 120 samples\nTest:   30 samples`
+  },
+  {
+    id: 9, title: "Linear Regression", tag: "regression",
+    tagLabel: "Regression",
+    subtitle: "Predicting continuous numbers",
+    analogy: "Draw the <strong>best straight line</strong> through your data points. Then use the line to predict values for new inputs — like a trend line in Excel.",
+    points: ["Finds relationship: y = m×x + b", "m = slope (how much y changes per unit of x)", "b = intercept (y value when x = 0)", "Evaluated with R² (1.0 = perfect) and MSE"],
+    steps: ["Plot Data", "Fit Line", "Get y=mx+b", "Predict!"],
+    code: `<span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> LinearRegression
+<span class="kw">from</span> sklearn.metrics <span class="kw">import</span> r2_score
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+<span class="nb">print</span>(<span class="str">f"Slope: {model.coef_[0]:.2f}"</span>)
+<span class="nb">print</span>(<span class="str">f"Intercept: {model.intercept_:.2f}"</span>)
+
+y_pred = model.predict(X_test)
+<span class="nb">print</span>(<span class="str">f"R² Score: {r2_score(y_test, y_pred):.3f}"</span>)`,
+    output: `Slope: 299.86\nIntercept: 338.27\nR² Score: 0.982`
+  },
+  {
+    id: 10, title: "Logistic Regression", tag: "classification",
+    tagLabel: "Classification",
+    subtitle: "Classifying into categories (despite the name!)",
+    analogy: "Despite the name, it's a <strong>classifier not regressor</strong>! It outputs a probability (0 to 1) and classifies based on a threshold (usually 0.5).",
+    points: ["Outputs probability between 0 and 1", "If prob > 0.5 → Class 1, else → Class 0", "Use C parameter to control regularization strength", "Scale your features before using logistic regression"],
+    steps: ["Scale X", "LogisticRegression()", "fit()", "predict()"],
+    code: `<span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> LogisticRegression
+<span class="kw">from</span> sklearn.preprocessing <span class="kw">import</span> StandardScaler
+
+scaler = StandardScaler()
+X_train_s = scaler.fit_transform(X_train)
+X_test_s  = scaler.transform(X_test)
+
+model = LogisticRegression(max_iter=<span class="nb">1000</span>)
+model.fit(X_train_s, y_train)
+
+y_pred = model.predict(X_test_s)
+y_prob = model.predict_proba(X_test_s)
+<span class="nb">print</span>(<span class="str">f"Accuracy: {accuracy_score(y_test, y_pred):.2%}"</span>)`,
+    output: `Accuracy: 97.37%\nClass 0 probability: 0.032\nClass 1 probability: 0.968`
+  },
+  {
+    id: 11, title: "Decision Trees", tag: "classification",
+    tagLabel: "Classification",
+    subtitle: "Flowchart-style yes/no decisions",
+    analogy: "Like a game of <strong>20 Questions</strong>! The tree asks questions about features (petal length > 2.5?) and follows the yes/no path to a prediction.",
+    points: ["Very interpretable — you can see exactly why it decides", "Can overfit if too deep — use max_depth to limit", "Feature importance shows which features matter most", "Works for both classification and regression"],
+    steps: ["Ask Question", "Split Data", "Recurse", "Leaf = Class"],
+    code: `<span class="kw">from</span> sklearn.tree <span class="kw">import</span> DecisionTreeClassifier, export_text
+
+model = DecisionTreeClassifier(
+    max_depth=<span class="nb">3</span>,       <span class="cm"># prevent overfitting</span>
+    random_state=<span class="nb">42</span>
+)
+model.fit(X_train, y_train)
+
+<span class="cm"># Print human-readable tree rules</span>
+rules = export_text(model, feature_names=feature_names)
+<span class="nb">print</span>(rules)
+
+<span class="cm"># Feature importances</span>
+<span class="kw">for</span> name, imp <span class="kw">in</span> zip(names, model.feature_importances_):
+    <span class="nb">print</span>(<span class="str">f"{name}: {imp:.3f}"</span>)`,
+    output: `|--- petal length <= 2.45\n|   |--- class: setosa\n|--- petal length > 2.45\n|   |--- petal width <= 1.75\n|   |   |--- class: versicolor`
+  },
+  {
+    id: 12, title: "Random Forests", tag: "classification",
+    tagLabel: "Classification",
+    subtitle: "Ensemble of 100+ decision trees — majority vote",
+    analogy: "Instead of one expert (Decision Tree), ask <strong>100 experts</strong> and take a vote! More trees = less chance of one bad decision ruining the result.",
+    points: ["n_estimators = number of trees (100–500 typical)", "Each tree trained on a random subset of data and features", "Final prediction = majority vote (classification) or mean (regression)", "Reduces overfitting that single trees suffer from"],
+    steps: ["Bootstrap Data", "Train N Trees", "Each Votes", "Majority Wins"],
+    code: `<span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> RandomForestClassifier
+
+model = RandomForestClassifier(
+    n_estimators=<span class="nb">100</span>,    <span class="cm"># 100 trees</span>
+    random_state=<span class="nb">42</span>
+)
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+<span class="nb">print</span>(<span class="str">f"Accuracy: {accuracy_score(y_test, y_pred):.2%}"</span>)
+
+<span class="cm"># Feature importances (great for insights!)</span>
+imps = model.feature_importances_
+<span class="kw">for</span> name, imp <span class="kw">in</span> zip(feature_names, imps):
+    <span class="nb">print</span>(<span class="str">f"{name}: {imp:.3f}"</span>)`,
+    output: `Accuracy: 100.00%\n\npetal length: 0.442 ████████████████\npetal width:  0.440 ████████████████`
+  },
+  {
+    id: 13, title: "K-Nearest Neighbors", tag: "classification",
+    tagLabel: "Classification",
+    subtitle: "Classify by the K closest neighbors",
+    analogy: "<strong>You are judged by the company you keep!</strong> KNN looks at the K closest training points and takes a vote — like asking your nearest neighbors for a recommendation.",
+    points: ["K=1 can overfit; K too large can underfit", "Always scale features — KNN uses Euclidean distance", "Slower than other models on large datasets", "Try multiple K values with cross-validation"],
+    steps: ["Scale X", "Choose K", "Find K Nearest", "Vote → Class"],
+    code: `<span class="kw">from</span> sklearn.neighbors <span class="kw">import</span> KNeighborsClassifier
+
+<span class="cm"># Try different K values</span>
+<span class="kw">for</span> k <span class="kw">in</span> [<span class="nb">1</span>, <span class="nb">3</span>, <span class="nb">5</span>, <span class="nb">7</span>]:
+    knn = KNeighborsClassifier(n_neighbors=k)
+    knn.fit(X_train_s, y_train)
+    acc = knn.score(X_test_s, y_test)
+    <span class="nb">print</span>(<span class="str">f"K={k}: {acc:.2%}"</span>)
+
+<span class="cm"># Use best K for final model</span>
+best_knn = KNeighborsClassifier(n_neighbors=<span class="nb">5</span>)
+best_knn.fit(X_train_s, y_train)`,
+    output: `K=1: 96.67%\nK=3: 96.67%\nK=5: 100.00%\nK=7: 96.67%`
+  },
+  {
+    id: 14, title: "Support Vector Machines", tag: "classification",
+    tagLabel: "Classification",
+    subtitle: "Maximum-margin classifier with kernels",
+    analogy: "Draw a dividing line with the <strong>widest possible margin</strong> between classes. The data points touching the margin are called Support Vectors — they define the boundary.",
+    points: ["Finds maximum margin hyperplane between classes", "kernel='rbf' (Gaussian) works well for most problems", "kernel='linear' faster for high-dimensional data", "C controls trade-off between margin and misclassifications"],
+    steps: ["Scale X", "SVC(kernel)", "Find Margin", "Predict!"],
+    code: `<span class="kw">from</span> sklearn.svm <span class="kw">import</span> SVC
+
+<span class="cm"># Compare kernels</span>
+<span class="kw">for</span> kernel <span class="kw">in</span> [<span class="str">'linear'</span>, <span class="str">'rbf'</span>, <span class="str">'poly'</span>]:
+    svm = SVC(kernel=kernel, random_state=<span class="nb">42</span>)
+    svm.fit(X_train_s, y_train)
+    acc = svm.score(X_test_s, y_test)
+    <span class="nb">print</span>(<span class="str">f"{kernel:8s}: {acc:.2%}"</span>)
+
+<span class="cm"># Best: RBF with probability estimates</span>
+best = SVC(kernel=<span class="str">'rbf'</span>, probability=<span class="nb">True</span>)
+best.fit(X_train_s, y_train)`,
+    output: `linear  : 97.37%\nrbf     : 98.25%\npoly    : 94.74%`
+  },
+  {
+    id: 15, title: "Evaluation Metrics", tag: "evaluation",
+    tagLabel: "Evaluation",
+    subtitle: "Accuracy, precision, recall, F1, R²",
+    analogy: "Accuracy alone lies! With 99% healthy patients, a model predicting 'always healthy' gets 99% accuracy — but catches <strong>0 sick patients</strong>. Use precision + recall too!",
+    points: ["Accuracy: % correct overall (misleading for imbalanced data)", "Precision: of predicted positives, how many are truly positive?", "Recall: of all actual positives, how many did we catch?", "F1 Score: harmonic mean of precision and recall"],
+    steps: ["y_true", "y_pred", "Metrics", "Decide!"],
+    code: `<span class="kw">from</span> sklearn.metrics <span class="kw">import</span> (
+    accuracy_score, precision_score,
+    recall_score, f1_score,
+    classification_report
+)
+
+acc  = accuracy_score(y_test, y_pred)
+prec = precision_score(y_test, y_pred)
+rec  = recall_score(y_test, y_pred)
+f1   = f1_score(y_test, y_pred)
+
+<span class="nb">print</span>(<span class="str">f"Accuracy:  {acc:.2%}"</span>)
+<span class="nb">print</span>(<span class="str">f"Precision: {prec:.2%}"</span>)
+<span class="nb">print</span>(<span class="str">f"Recall:    {rec:.2%}"</span>)
+<span class="nb">print</span>(<span class="str">f"F1 Score:  {f1:.2%}"</span>)`,
+    output: `Accuracy:  97.37%\nPrecision: 98.59%\nRecall:    97.18%\nF1 Score:  97.88%`
+  },
+  {
+    id: 16, title: "Cross-Validation", tag: "evaluation",
+    tagLabel: "Evaluation",
+    subtitle: "Reliable accuracy with k-fold splitting",
+    analogy: "What if your test split was unlucky? <strong>Cross-validation</strong> tests on 5 different splits and averages the results — much more reliable than a single test.",
+    points: ["Splits data into K folds, trains/tests K times", "Final score = mean ± std of all K scores", "Detects high variance (unstable) models", "Use cross_val_score() for quick CV"],
+    steps: ["Split K Folds", "Train K Times", "Score Each", "Average!"],
+    code: `<span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> cross_val_score
+<span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> RandomForestClassifier
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+model = RandomForestClassifier(n_estimators=<span class="nb">100</span>)
+
+scores = cross_val_score(
+    model, X, y,
+    cv=<span class="nb">5</span>,             <span class="cm"># 5-fold CV</span>
+    scoring=<span class="str">'accuracy'</span>
+)
+
+<span class="nb">print</span>(<span class="str">f"Scores: {scores.round(3)}"</span>)
+<span class="nb">print</span>(<span class="str">f"Mean:   {scores.mean():.2%}"</span>)
+<span class="nb">print</span>(<span class="str">f"Std:  ±{scores.std():.2%}"</span>)`,
+    output: `Scores: [1.0   0.967 0.933 0.967 1.0  ]\nMean:   97.33%\nStd:  ± 2.49%`
+  },
+  {
+    id: 17, title: "Hyperparameter Tuning", tag: "evaluation",
+    tagLabel: "Evaluation",
+    subtitle: "GridSearchCV to find optimal settings",
+    analogy: "Hyperparameters are like oven settings before baking. GridSearchCV <strong>automatically tries every combination</strong> and tells you which baked the best cake!",
+    points: ["Hyperparameters set before training (n_estimators, max_depth)", "GridSearchCV tries all combinations — exhaustive but slow", "RandomizedSearchCV faster — samples random combinations", "Always CV inside the search to avoid data leakage"],
+    steps: ["Define Grid", "GridSearchCV", "Fit All", "Best Params!"],
+    code: `<span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> GridSearchCV
+
+param_grid = {
+    <span class="str">'n_estimators'</span>: [<span class="nb">50</span>, <span class="nb">100</span>, <span class="nb">200</span>],
+    <span class="str">'max_depth'</span>:    [<span class="nb">None</span>, <span class="nb">3</span>, <span class="nb">5</span>],
+    <span class="str">'min_samples_split'</span>: [<span class="nb">2</span>, <span class="nb">5</span>]
+}  <span class="cm"># 3×3×2 = 18 combinations</span>
+
+gs = GridSearchCV(RandomForestClassifier(),
+                  param_grid, cv=<span class="nb">5</span>)
+gs.fit(X, y)
+
+<span class="nb">print</span>(gs.best_params_)
+<span class="nb">print</span>(<span class="str">f"Best score: {gs.best_score_:.2%}"</span>)`,
+    output: `{'max_depth': None, 'min_samples_split': 2,\n 'n_estimators': 100}\nBest score: 97.33%`
+  },
+  {
+    id: 18, title: "Pipelines", tag: "preprocessing",
+    tagLabel: "Preprocessing",
+    subtitle: "Chain preprocessing + model into one object",
+    analogy: "A pipeline is like an <strong>assembly line</strong> — raw data goes in, preprocessing and training happens automatically in order, predictions come out. No manual steps forgotten!",
+    points: ["Prevents data leakage — preprocessing fitted on train only", "Easier to deploy — one object handles everything", "Cross-validate the entire pipeline at once", "GridSearchCV works seamlessly with pipelines"],
+    steps: ["Define Steps", "Pipeline(steps)", "fit()", "predict()"],
+    code: `<span class="kw">from</span> sklearn.pipeline <span class="kw">import</span> Pipeline
+<span class="kw">from</span> sklearn.preprocessing <span class="kw">import</span> StandardScaler
+<span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> RandomForestClassifier
+
+pipeline = Pipeline([
+    (<span class="str">'imputer'</span>,  SimpleImputer(strategy=<span class="str">'median'</span>)),
+    (<span class="str">'scaler'</span>,   StandardScaler()),
+    (<span class="str">'model'</span>,    RandomForestClassifier(<span class="nb">100</span>))
+])
+
+pipeline.fit(X_train, y_train)  <span class="cm"># all steps!</span>
+y_pred = pipeline.predict(X_test)  <span class="cm"># all steps!</span>
+<span class="nb">print</span>(<span class="str">f"Accuracy: {accuracy_score(y_test, y_pred):.2%}"</span>)`,
+    output: `Steps: ['imputer', 'scaler', 'model']\nAccuracy: 96.49%\nPipeline ready for production!`
+  },
+  {
+    id: 19, title: "Confusion Matrix", tag: "evaluation",
+    tagLabel: "Evaluation",
+    subtitle: "Full breakdown of prediction outcomes",
+    analogy: "A <strong>table showing every prediction type</strong>: correct positives (TP), correct negatives (TN), and mistakes (FP/FN). Essential for medical and fraud detection models!",
+    points: ["True Positive (TP): correctly predicted positive", "True Negative (TN): correctly predicted negative", "False Positive (FP): predicted positive, was negative (Type I)", "False Negative (FN): predicted negative, was positive (Type II)"],
+    steps: ["Make Predictions", "Compare y_true, y_pred", "Build Matrix", "Analyze Errors"],
+    code: `<span class="kw">from</span> sklearn.metrics <span class="kw">import</span> confusion_matrix
+
+cm = confusion_matrix(y_test, y_pred)
+<span class="nb">print</span>(<span class="str">"Confusion Matrix:"</span>)
+<span class="nb">print</span>(<span class="str">"              Predicted"</span>)
+<span class="nb">print</span>(<span class="str">"              Neg  Pos"</span>)
+<span class="nb">print</span>(<span class="str">f"Actual Neg  [ {cm[0,0]:3d}, {cm[0,1]:3d} ]"</span>)
+<span class="nb">print</span>(<span class="str">f"Actual Pos  [ {cm[1,0]:3d}, {cm[1,1]:3d} ]"</span>)
+
+<span class="cm"># TP, TN, FP, FN</span>
+TN, FP, FN, TP = cm.ravel()
+<span class="nb">print</span>(<span class="str">f"TP={TP}, TN={TN}, FP={FP}, FN={FN}"</span>)`,
+    output: `            Predicted\n              Neg  Pos\nActual Neg  [  41,   2 ]\nActual Pos  [   1,  70 ]\n\nTP=70, TN=41, FP=2, FN=1`
+  },
+  {
+    id: 20, title: "K-Means Clustering", tag: "unsupervised",
+    tagLabel: "Unsupervised",
+    subtitle: "Grouping data without labels",
+    analogy: "No labels? K-Means automatically groups similar data points. Like sorting a pile of mixed fruits into groups — the computer decides the groups <strong>by similarity alone</strong>!",
+    points: ["Choose K (number of clusters) before training", "Use the Elbow Method or Silhouette Score to find best K", "Algorithm assigns each point to its nearest centroid", "Great for customer segmentation, anomaly detection"],
+    steps: ["Choose K", "Assign to Centers", "Move Centers", "Converged!"],
+    code: `<span class="kw">from</span> sklearn.cluster <span class="kw">import</span> KMeans
+<span class="kw">from</span> sklearn.metrics <span class="kw">import</span> silhouette_score
+
+<span class="cm"># Find best K with silhouette score</span>
+<span class="kw">for</span> k <span class="kw">in</span> range(<span class="nb">2</span>, <span class="nb">7</span>):
+    km = KMeans(n_clusters=k, n_init=<span class="str">'auto'</span>)
+    km.fit(X)
+    s = silhouette_score(X, km.labels_)
+    <span class="nb">print</span>(<span class="str">f"K={k}: silhouette={s:.3f}"</span>)
+
+<span class="cm"># Train with best K</span>
+km = KMeans(n_clusters=<span class="nb">4</span>, random_state=<span class="nb">42</span>)
+km.fit(X)
+labels = km.labels_  <span class="cm"># cluster for each sample</span>`,
+    output: `K=2: silhouette=0.612\nK=3: silhouette=0.711\nK=4: silhouette=0.843  ← best\nK=5: silhouette=0.810`
+  }
+];
+
+const tagColors = {
+  foundation: 'tag-foundation',
+  preprocessing: 'tag-preprocessing',
+  regression: 'tag-regression',
+  classification: 'tag-classification',
+  evaluation: 'tag-evaluation',
+  unsupervised: 'tag-unsupervised'
+};
+
+const sections = [
+  { label: "Foundations", ids: [1,2,3,4,5] },
+  { label: "Preprocessing", ids: [6,7,8,18] },
+  { label: "Regression", ids: [9] },
+  { label: "Classification", ids: [10,11,12,13,14] },
+  { label: "Evaluation", ids: [15,16,17,19] },
+  { label: "Unsupervised", ids: [20] }
+];
+
+let current = 0;
+
+function buildNav() {
+  const nav = document.getElementById('nav-list');
+  nav.innerHTML = '';
+  sections.forEach(sec => {
+    const lbl = document.createElement('div');
+    lbl.className = 'nav-label';
+    lbl.textContent = sec.label;
+    nav.appendChild(lbl);
+    sec.ids.forEach(id => {
+      const c = concepts.find(x => x.id === id);
+      const idx = concepts.indexOf(c);
+      const item = document.createElement('div');
+      item.className = 'nav-item' + (idx === current ? ' active' : '');
+      item.innerHTML = `<span class="num">${c.id}</span>${c.title}`;
+      item.onclick = () => { current = idx; render(); };
+      nav.appendChild(item);
+    });
+  });
+}
+
+function render() {
+  const c = concepts[current];
+  buildNav();
+  const area = document.getElementById('content-area');
+  area.innerHTML = `
+    <div class="concept-header">
+      <span class="concept-tag ${tagColors[c.tag]}">${c.tagLabel}</span>
+      <div class="concept-title">${c.title}</div>
+      <div class="concept-subtitle">${c.subtitle}</div>
+    </div>
+    <div class="analogy-box">${c.analogy}</div>
+    <div class="section">
+      <div class="section-title">Key points</div>
+      <div class="key-points">
+        ${c.points.map(p => `<div class="key-point"><i class="ti ti-check" style="font-size:14px" aria-hidden="true"></i><span>${p}</span></div>`).join('')}
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Workflow</div>
+      <div class="step-flow">
+        ${c.steps.map((s,i) => `<span class="step-box">${s}</span>${i<c.steps.length-1?'<span class="step-arrow">→</span>':''}`).join('')}
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Code example</div>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">python</span>
+          <button class="code-copy" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i> copy</button>
+        </div>
+        <pre id="code-content">${c.code}</pre>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Output</div>
+      <div class="output-block">${c.output.replace(/\n/g,'<br>')}</div>
+    </div>
+    <div class="bottom-nav">
+      <button class="nav-btn" onclick="go(-1)" ${current===0?'disabled style="opacity:0.4"':''}>
+        <i class="ti ti-arrow-left" aria-hidden="true"></i> Previous
+      </button>
+      <span class="progress-text">Concept ${current+1} of ${concepts.length}</span>
+      <button class="nav-btn primary" onclick="go(1)" ${current===concepts.length-1?'disabled style="opacity:0.4"':''}>
+        Next <i class="ti ti-arrow-right" aria-hidden="true"></i>
+      </button>
+    </div>
+  `;
+  area.scrollTop = 0;
+}
+
+function go(dir) {
+  current = Math.max(0, Math.min(concepts.length - 1, current + dir));
+  render();
+}
+
+function copyCode(btn) {
+  const pre = document.getElementById('code-content');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.innerHTML = '<i class="ti ti-check" aria-hidden="true"></i> copied!';
+    setTimeout(() => { btn.innerHTML = '<i class="ti ti-copy" aria-hidden="true"></i> copy'; }, 1500);
+  });
+}
+
+render();
+</script>
